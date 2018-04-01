@@ -1,15 +1,13 @@
-function checkInternal (variavel)
-{
-    if (variavel == null || variavel == '' || variavel == undefined)
-    { return false; }
-    else
-    { return true; }
+function checkInternal (variavel) {
+    if (variavel == null || variavel == '' || variavel == undefined) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
-class dado
-{
-    constructor (a, op, b)
-    {
+class dado {
+    constructor (a, op, b) {
         this.a = a;
         this.op = op;
         this.b = b;
@@ -17,12 +15,9 @@ class dado
         this.t = null;       //armazena valor temporario para calcular operações de maior prioridade ('*' e '/')
         this.opT = null;     //armazena operação temporaria
     }
-    calcular ()
-    {
-        if(checkInternal(this.a) == true && checkInternal(this.b) == true)
-        {
-            switch (this.op)
-            {
+    calcular () {
+        if(checkInternal(this.a) == true && checkInternal(this.b) == true) {
+            switch (this.op) {
                 case '+':
                     return this.r = Number(this.a) + Number(this.b);
                 case '-':
@@ -35,13 +30,11 @@ class dado
             mem.op = '';
         }
     }
-    limparOpB ()
-    {
+    limparOpB () {
         this.op = '';
         this.b = '';
     }
-    limparTudo ()
-    {
+    limparTudo () {
         this.a = '';
         this.op = '';
         this.b = '';
@@ -51,34 +44,25 @@ class dado
 
 var mem = new dado('','','');
 
-function definirModo (string)
-{
-    var ss = 0;
-    var md = 0;
-    for (var i = 0; i < string.length; i++)
-    {
-        if (string[i] == '*' || string[i] == '/')
-        {
+function definirModo (string) {
+    var ss = 0; //soma e subtração
+    var md = 0; //multiplicação e divisão
+    for (var i = 0; i < string.length; i++) {
+        if (string[i] == '*' || string[i] == '/') {
             md = 1;
-        }
-        else if (string[i] == '+' || string[i] == '-')
-        {
+        } else if (string[i] == '+' || string[i] == '-') {
             ss = 1;
         }
     }
-    if (ss = 1 && md == 1)
-    {
-        return 'S';
-    }
-    else
-    {
+    if (ss == 1 && md == 1) {
         return 'A';
+    } else {
+        return 'S';
     }
 }
 
 
-function processarAB (txt)
-{
+function processarAB (txt) {
 
 //NOTE: o calculo de operações mais complexas é dividido em partes, com o apoio de duas
 // variáveis temporárias para auxílio, mem.opT e mem.t.
@@ -90,22 +74,20 @@ function processarAB (txt)
 //  '2+12/5'
 //  '2+2.4'
 //  '4.4'
-    var string = new String(txt);    //converte txt para string
+    var string = txt;
     var modo = definirModo(string);  //define o modo:
     //simples para  ('+' e '-') OU ('*' e '/')
     //avançado para  ('*' ou '/') e ('+' ou '-')
 
-    if (modo == 'S')
-    {
+    if (modo == 'S') {
+        console.log('calculando em modo: ' + modo);
         modoSimples();
-    }
-    else
-    {
+    } else {
+        console.log('calculando em modo: ' + modo);
         modoAvancado();
     }
 
-    function caluloPorPartes ()
-    {
+    function caluloPorPartes () {
         mem.calcular();
         console.log('calculando: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
         mem.op = mem.opT;        //move os dados temporários
@@ -119,27 +101,18 @@ function processarAB (txt)
         mem.limparOpB();
     }
 
-    function modoSimples ()
-    {
-        for (var i = 0; i < string.length; i++)
-        {   //percorrendo string
-            if (Number(string[i]) == Number(string[i]))
-            {   //compara se é número
-                if ((checkInternal(mem.op) == false && checkInternal(mem.r) == false))
-                {     //se primeiro operador não foi encontrado
+    function modoSimples () {
+        for (var i = 0; i < string.length; i++) {   //percorrendo string
+            if (isNaN(Number(string[i])) == false) {   //compara se é número
+                if ((checkInternal(mem.op) == false && checkInternal(mem.r) == false)) {     //se primeiro operador não foi encontrado
                     mem.a += string[i];
                     console.log('mem.a: ' + mem.a);
-                }
-                else
-                {    //senão armazena em b
+                } else {    //senão armazena em b
                     mem.b += string[i];
                     console.log('mem.b: ' + mem.b);
                 }
-            }
-            else if (string[i] != '=')
-            {
-                if (checkInternal(mem.a) == true && checkInternal(mem.b) == true)
-                {
+            } else if (string[i] != '=') {
+                if (checkInternal(mem.a) == true && checkInternal(mem.b) == true) {
                     mem.calcular();
                     console.log('calculando: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
                     mem.a = mem.r;
@@ -147,62 +120,42 @@ function processarAB (txt)
                 }
                 mem.op = string[i];
                 console.log('mem.op: ' + mem.op);
-            }
-            else
-            {
+            } else {
                 mem.calcular();
                 console.log('calculo final [S]: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
             }
         }
     }
 
-    function modoAvancado ()
-    {
-        for (var i = 0; i < string.length; i++)
-        {   //percorrendo string
-            if (Number(string[i]) == Number(string[i]))
-            {   //compara se é número
-                if ((checkInternal(mem.op) == false && checkInternal(mem.r) == false))
-                {     //se primeiro operador não foi encontrado
+    function modoAvancado () {
+        for (var i = 0; i < string.length; i++) {   //percorrendo string
+            if (isNaN(Number(string[i])) == false) {   //compara se é número
+                if ((checkInternal(mem.op) == false && checkInternal(mem.r) == false)) {     //se primeiro operador não foi encontrado
                     mem.a += string[i];
                     console.log('mem.a: ' + mem.a);
-                }
-                else
-                {    //senão armazena em b
+                } else {    //senão armazena em b
                     mem.b += string[i];
                     console.log('mem.b: ' + mem.b);
                 }
-            }
-            else if(string[i] != '=')
-            {    //caso seja um op
-                if (checkInternal(mem.b) == true && checkInternal(mem.a) == true && checkInternal(mem.op) == true)
-                { //se A, B e op não estiverem vazios enão pode calcular
-                    if (string[i] == '+' || string[i] == '-')
-                    {
-                        if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true)
-                        { //se as memorias temporárias estão ocupadas
+            } else if(string[i] != '=') {    //caso seja um op
+                if (checkInternal(mem.b) == true && checkInternal(mem.a) == true && checkInternal(mem.op) == true) { //se A, B e op não estiverem vazios e não pode calcular
+                    if (string[i] == '+' || string[i] == '-') {
+                        if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true) { //se as memorias temporárias estão ocupadas
                             caluloPorPartes();
-                        }
-                        else
-                        {
+                        } else {
                             mem.calcular();
                             console.log('calculando: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
                             mem.limparOpB(); //limpa op e B
                             mem.a = mem.r;   //move resultado para A pois há mais uma operacao
                         }
 
-                    }
-                    else
-                    {        //caso op seja '*' ou '/' move os valores para memoria temporaria
-                        if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true)
-                        {
+                    } else {        //caso op seja '*' ou '/' move os valores para memoria temporaria
+                        if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true) {
                             mem.calcular();
                             console.log('calculando: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
                             mem.a = mem.r;
                             mem.limparOpB();
-                        }
-                        else
-                        {
+                        } else {
                             mem.t = mem.a;   //move a para memoria temporaria
                             mem.a = mem.b;
                             mem.opT = mem.op;    //pega op principal e coloca como secundario
@@ -212,12 +165,9 @@ function processarAB (txt)
                 }
                 mem.op = string[i];
                 console.log('mem.op: ' + mem.op);
-            }
-            else
-            {      //para '='
+            } else {      //para '='
                 mem.calcular();
-                if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true)
-                { //se as memorias temporárias estão ocupadas
+                if (checkInternal(mem.opT) == true && checkInternal(mem.t) == true) { //se as memorias temporárias estão ocupadas
                     caluloPorPartes();
                 }
                 console.log('calculo final [A]: ' + mem.a + ' ' + mem.op + ' ' + mem.b + ' = ' + mem.r);
