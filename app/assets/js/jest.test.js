@@ -1,4 +1,5 @@
 const main = require('./main.js');
+const in2pos = require('./in2pos.js');
 const tl = require('./testList.js');
 
 let tamList = tl.LivroTestes.length;
@@ -11,11 +12,20 @@ do {
     for (i2 = 0; i2 < tamTestList; i2++) {
         let expr = tl.LivroTestes[i1].tests[i2].expr;
         let result = tl.LivroTestes[i1].tests[i2].r;
-        describe(tl.LivroTestes[i1].titulo + ' ', () => {
-            test( expr + ' ' + result , () => {
-                expect(main.processarAB(expr)).toEqual(result);
+
+        if(tl.LivroTestes[i1].titulo == 'in2pos') {
+            describe(tl.LivroTestes[i1].titulo + ' ', () => {
+                test( expr + ' -> ' + result , () => {
+                    expect(in2pos.In2Pos(expr)).toEqual(result);
+                });
             });
-        });
+        } else {
+            describe(tl.LivroTestes[i1].titulo + ' ', () => {
+                test( expr + ' ' + result , () => {
+                    expect(main.processarAB(expr)).toEqual(result);
+                });
+            });
+        }
     }
     i1++;
 } while (i1 < tamList);
