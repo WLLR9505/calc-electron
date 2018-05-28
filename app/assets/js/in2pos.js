@@ -6,6 +6,36 @@ function pilhaDado () {
     this.desempilhar = function () {
         this.dado.shift();
     };
+    this.calcular = function (op) {
+        let a = this.dado[this.dado.length - 2];
+        let b = this.dado[this.dado.length - 1];
+        this.dado.pop();
+        this.dado.pop();
+        switch (op) {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                return a / b;
+        }
+    };
+}
+
+function CalcPosfix (posfix) {
+    var pilha = new pilhaDado();
+    let r;
+    for (var i = 0; i < posfix.length; i++) {
+        if (posfix[i] === '-' || posfix[i] === '+' || posfix[i] === '*' || posfix[i] === '/') {
+            pilha.empilhar(pilha.calcular(posfix[i]));
+        } else {
+            pilha.empilhar(posfix[i]);
+        }
+    }
+    // console.log(pilha.dado);
+    return r = pilha.dado.pop();
 }
 
 function In2Pos (txt) {
@@ -49,10 +79,12 @@ function In2Pos (txt) {
             pilha.empilhar(txt[i]);
         } else if (txt[i] === ')') {
             //4
-            //inclui na exprPosfix o ultimo valor da pilha
-            exprPosfix.push(pilha.dado[pilha.dado.length - 1]);
-            //remove o ultimo valor da pilha
-            pilha.dado.pop();
+            while (pilha.dado.length > 0) {
+                //inclui na exprPosfix o ultimo valor da pilha
+                exprPosfix.push(pilha.dado[pilha.dado.length - 1]);
+                //remove o ultimo valor da pilha
+                pilha.dado.pop();
+            }
         }
     }
     while (pilha.dado.length > 0) {
@@ -60,15 +92,17 @@ function In2Pos (txt) {
         exprPosfix.push(pilha.dado[atual - 1]);
         pilha.dado.pop();
     }
-    console.log(exprPosfix);
+    // console.log(exprPosfix);
     return exprPosfix;
 }
 
-// In2Pos('1-20+3');
+In2Pos('(((3+2)*4)/2)+2');
+var pos = [ 1, 2, '-', 3, 4, '+', 5, '*', '/' ]
+CalcPosfix(pos);
 
 try {
     //tenta exportar para fazer testes no jest
-    module.exports = { In2Pos };
+    module.exports = { In2Pos , CalcPosfix };
 } catch(e) {
     console.log('module.exports inutilizado');
 }

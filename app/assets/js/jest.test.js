@@ -19,6 +19,12 @@ do {
                     expect(in2pos.In2Pos(expr)).toEqual(result);
                 });
             });
+        } else if (tl.LivroTestes[i1].titulo == 'calcPos') {
+            describe(tl.LivroTestes[i1].titulo + ' ', () => {
+                test( expr + ' = ' + result , () => {
+                    expect(in2pos.CalcPosfix(expr)).toEqual(result);
+                });
+            });
         } else {
             describe(tl.LivroTestes[i1].titulo + ' ', () => {
                 test( expr + ' ' + result , () => {
