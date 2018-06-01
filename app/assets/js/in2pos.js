@@ -4,7 +4,7 @@ function pilhaDado () {
         this.dado.push(expr);
     };
     this.desempilhar = function () {
-        this.dado.shift();
+        return this.dado.pop();
     };
     this.calcular = function (op) {
         let a = this.dado[this.dado.length - 2];
@@ -24,41 +24,63 @@ function pilhaDado () {
     };
 }
 
+function MatSimb (txt) {
+    if (txt === '+' || txt === '-' || txt === '/' || txt === '*' || txt === '^') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function prior (c, t) {
+    var pc, pt;
+    if (c == '^') {
+        pc = 4;
+    } else if (c == '*' || c == '/') {
+        pc = 2;
+    } else if (c == '+' || c == '-') {
+        pc = 1;
+    } else if (c == '(') {
+        pc = 4;
+    }
+
+    if (t == '^') {
+        pt = 3;
+    } else if (t == '*' || t == '/') {
+        pt = 2;
+    } else if (t == '+' || t == '-') {
+        pt = 1;
+    } else if (t == '(') {
+        pt = 0;
+    }
+
+    return (pc > pt);
+}
+
 function CalcPosfix (posfix) {
     var pilha = new pilhaDado();
     let r;
     for (var i = 0; i < posfix.length; i++) {
-        if (posfix[i] === '-' || posfix[i] === '+' || posfix[i] === '*' || posfix[i] === '/') {
+        if (MatSimb(posfix[i]) === true) {
             pilha.empilhar(pilha.calcular(posfix[i]));
         } else {
             pilha.empilhar(posfix[i]);
         }
     }
-    // console.log(pilha.dado);
-    return r = pilha.dado.pop();
+    console.log(pilha.dado);
+    return r = pilha.desempilhar();
 }
 
 function In2Pos (txt) {
-    /* NOTE: regras conversão Infix para exprPosfix (usando array para números maiores que 9)
-    1 - se for ( descartar
-    2 - se for operando incluir no array exprPosfix
-    3 - se for operador colocar na pilha
-        3.1 - se o operador que entra for '+' ou '-' e operador da pilha for '+' ou '-' entao desempilhar, colocar em posfix e empilha o operador que entra
-    4 - se for ) descartar, colocar o ultimo operador da pilha no array exprPosfix
-    */
-
     var exprPosfix = new Array();
     var pilha = new pilhaDado();
+    var t;
 
-    // pilha.empilhar('(');
+    pilha.empilhar('(');
     for (var i = 0; i < txt.length; i++) {
-        // console.log(txt[i]);
-
         if (txt[i] === '(') {
-            //1
-            continue;
+            pilha.empilhar('(');
         } else if (isNaN(txt[i]) === false) {
-            //2
             var n = i;
             var num = ''; //armazena valores maiores que 9
             while ((isNaN(txt[n]) === false) || txt[n] === '.') {
@@ -70,35 +92,39 @@ function In2Pos (txt) {
                 //n - 1 pois o while soma 1 na ultima passagem para dar falso e sair do loop
             }
             exprPosfix.push(Number(num));
-        } else if (txt[i] === '-' || txt[i] === '+' || txt[i] === '*' || txt[i] === '/') {
-            //3
-            if ((pilha.dado[pilha.dado.length - 1] === '+' || pilha.dado[pilha.dado.length - 1] === '-') && (txt[i] === '-' || txt[i] === '+')) {
-                exprPosfix.push(pilha.dado[pilha.dado.length - 1]);
-                pilha.dado.pop();
+        } else if (MatSimb(txt[i]) === true) {
+            while (true) {
+                t = pilha.desempilhar();
+                if (prior(txt[i], t)) {
+                    pilha.empilhar(t);
+                    pilha.empilhar(txt[i]);
+                    break;
+                } else {
+                    exprPosfix.push(t);
+                }
             }
-            pilha.empilhar(txt[i]);
-        } else if (txt[i] === ')') {
-            //4
-            while (pilha.dado.length > 0) {
-                //inclui na exprPosfix o ultimo valor da pilha
-                exprPosfix.push(pilha.dado[pilha.dado.length - 1]);
-                //remove o ultimo valor da pilha
-                pilha.dado.pop();
-            }
+        } else if (txt[i] === ')' || txt[i] === undefined) {
+            do {
+                t = pilha.desempilhar();
+                if (t != '(') {
+                    exprPosfix.push(t);
+                }
+            } while (t != '(');
         }
     }
     while (pilha.dado.length > 0) {
         var atual = pilha.dado.length;
-        exprPosfix.push(pilha.dado[atual - 1]);
-        pilha.dado.pop();
+        if (pilha.dado[atual - 1] != '(') {
+            exprPosfix.push(pilha.dado[atual - 1]);
+        }
+        pilha.desempilhar();
     }
-    // console.log(exprPosfix);
+    console.log(exprPosfix);
     return exprPosfix;
 }
 
-In2Pos('(((3+2)*4)/2)+2');
-var pos = [ 1, 2, '-', 3, 4, '+', 5, '*', '/' ]
-CalcPosfix(pos);
+// var expr = '(1721+2)/(325-4763)';
+// CalcPosfix(In2Pos(expr));
 
 try {
     //tenta exportar para fazer testes no jest
