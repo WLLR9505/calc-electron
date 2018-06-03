@@ -1,4 +1,3 @@
-const main = require('./main.js');
 const in2pos = require('./in2pos.js');
 const tl = require('./testList.js');
 
@@ -29,12 +28,6 @@ do {
             describe(tl.LivroTestes[i1].titulo + ' ', () => {
                 test( expr + ' = ' + result , () => {
                     expect(in2pos.CalcPosfix(in2pos.In2Pos(expr))).toEqual(result);
-                });
-            });
-        } else {
-            describe(tl.LivroTestes[i1].titulo + ' ', () => {
-                test( expr + ' ' + result , () => {
-                    expect(main.processarAB(expr)).toEqual(result);
                 });
             });
         }

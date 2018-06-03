@@ -20,6 +20,8 @@ function pilhaDado () {
                 return a * b;
             case '/':
                 return a / b;
+            case '^':
+                return Math.pow(a, b);
         }
     };
 }
