@@ -112,6 +112,10 @@ function In2Pos (txt) {
                     exprPosfix.push(t);
                 }
             } while (t != '(');
+        } else if (txt[i] === '%') {
+            console.log('%');
+            t = exprPosfix.pop();
+            exprPosfix.push(t / 100);
         }
     }
     while (pilha.dado.length > 0) {

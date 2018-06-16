@@ -1,6 +1,5 @@
 const in2pos = require('./in2pos.js');
-const tl = require('./testList.js');
-
+var tl = require('./testList.json');
 let tamList = tl.LivroTestes.length;
 let i1 = 0;
 let i2 = 0;
