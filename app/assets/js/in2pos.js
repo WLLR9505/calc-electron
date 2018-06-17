@@ -76,16 +76,24 @@ function CalcPosfix (posfix) {
 function In2Pos (txt) {
     var exprPosfix = new Array();
     var pilha = new pilhaDado();
+    var pilhaSinal = new pilhaDado();
     var t;
 
     pilha.empilhar('(');
     for (var i = 0; i < txt.length; i++) {
-        if (txt[i] === '(') {
+
+        if(i == 0 && txt[i] === '-') {
+            //caso o primeiro seja um sinal
+            pilhaSinal.empilhar(txt[0]);
+        } else if (txt[i] === '(') {
             pilha.empilhar('(');
         } else if (isNaN(txt[i]) === false) {
             var n = i;
             var num = ''; //armazena valores maiores que 9
             while ((isNaN(txt[n]) === false) || txt[n] === '.') {
+                if (pilhaSinal.dado.length == 1) {
+                    num = num.concat(pilhaSinal.desempilhar());
+                }
                 num = num.concat(txt[n]);
                 n++;
             }
@@ -95,14 +103,19 @@ function In2Pos (txt) {
             }
             exprPosfix.push(Number(num));
         } else if (MatSimb(txt[i]) === true) {
-            while (true) {
-                t = pilha.desempilhar();
-                if (prior(txt[i], t)) {
-                    pilha.empilhar(t);
-                    pilha.empilhar(txt[i]);
-                    break;
-                } else {
-                    exprPosfix.push(t);
+            if (MatSimb(txt[i - 1]) === true) {
+                //se o anterior era um sinal, então o atual é sinal do número
+                pilhaSinal.empilhar(txt[i]);
+            } else {
+                while (true) {
+                    t = pilha.desempilhar();
+                    if (prior(txt[i], t)) {
+                        pilha.empilhar(t);
+                        pilha.empilhar(txt[i]);
+                        break;
+                    } else {
+                        exprPosfix.push(t);
+                    }
                 }
             }
         } else if (txt[i] === ')' || txt[i] === undefined) {
