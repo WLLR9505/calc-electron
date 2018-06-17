@@ -134,6 +134,13 @@ td {
 #op>tr>td> {
     background-color: blue;
 }
+
+.btnTeclado, .btnlateral {
+    width: 100%;
+    height: 100%;
+    padding-top: 30%;
+}
+
 #op>tr>td>div:hover, #btnPt:hover, #btnNum:hover {
     transform: scale(1.2);
 }
