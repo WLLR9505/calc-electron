@@ -25,9 +25,26 @@ function pilhaDado () {
         }
     };
 }
+function fatorial (n) {
+    if (n < 0) {
+        return -1;
+    } else if (n == 0) {
+        return 1;
+    } else {
+        return (n * fatorial(n - 1));
+    }
+}
 
 function MatSimb (txt) {
     if (txt === '+' || txt === '-' || txt === '/' || txt === '*' || txt === '^') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function MatExtra (txt) {
+    if (txt === '%' || txt === '\u221A' || txt === '\u221B' || txt === '!') {
         return true;
     } else {
         return false;
@@ -69,7 +86,7 @@ function CalcPosfix (posfix) {
             pilha.empilhar(posfix[i]);
         }
     }
-    console.log(pilha.dado);
+    // console.log(pilha.dado);
     return r = pilha.desempilhar();
 }
 
@@ -125,10 +142,32 @@ function In2Pos (txt) {
                     exprPosfix.push(t);
                 }
             } while (t != '(');
-        } else if (txt[i] === '%') {
-            console.log('%');
-            t = exprPosfix.pop();
-            exprPosfix.push(t / 100);
+        } else if (MatExtra(txt[i])) {
+            if (txt[i] == '%') {
+                t = exprPosfix.pop();
+                exprPosfix.push(t / 100);
+            } else if (txt[i] == '!') {
+                t = exprPosfix.pop();
+                exprPosfix.push(fatorial(t));
+            } else if (txt[i] == '\u221A' || txt[i] == '\u221B') {
+                n = i + 1;
+                num = '';
+                while ((isNaN(txt[n]) === false) || txt[n] === '.') {
+                    if (pilhaSinal.dado.length == 1) {
+                        num = num.concat(pilhaSinal.desempilhar());
+                    }
+                    num = num.concat(txt[n]);
+                    n++;
+                }
+                if (txt[i] == '\u221A') {
+                    exprPosfix.push(Math.sqrt(Number(num)));
+                } else if (txt[i] == '\u221B') {
+                    exprPosfix.push(Math.cbrt(Number(num)));
+                }
+                if (n != i + 1) {
+                    i = n - 1;
+                }
+            }
         }
     }
     while (pilha.dado.length > 0) {
@@ -138,7 +177,7 @@ function In2Pos (txt) {
         }
         pilha.desempilhar();
     }
-    console.log(exprPosfix);
+    // console.log(exprPosfix);
     return exprPosfix;
 }
 
