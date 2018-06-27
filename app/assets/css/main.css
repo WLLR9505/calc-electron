@@ -2,6 +2,7 @@
     background-color: #333333;
     font-family: Brandon Grotesque, Arial;
     display: block;
+    user-select: none;
 }
 
 /* ELEMENTOS DO VISOR */
