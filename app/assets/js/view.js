@@ -15,11 +15,9 @@ calc.style.textAlign = 'center';
 
 var lblResultado = document.createElement('div');
 lblResultado.setAttribute('id', 'resultado');
-lblResultado.innerText = '2';
 
 var lblTemp = document.createElement('div');
 lblTemp.setAttribute('id', 'memoria');
-lblTemp.innerText = '0.5*2+1=';
 
 var lblMore = document.createElement('div');
 lblMore.setAttribute('id', 'lblMore');
@@ -49,10 +47,11 @@ function Ativar () {
     render.appendChild(calc);
 
     DefinirLayout([ 1, 2 ], [ lblTemp, lblResultado ], visor, 'visorSUP', false, 'SUP');
-    DefinirLayout([ 2, 1 ] , [ lblMore, btnLimpar ] , visor, 'visorINF', false, 'INF');
+    DefinirLayout([ 2, 1 ], [ lblMore, btnLimpar ], visor, 'visorINF', false, 'INF');
 
     DefinirLayout([ 1, 7 ], btnlateral, op, 'op', true, '');
     DefinirLayout([ 3, 4 ], btnTeclado, teclas, 'teclas', true, '');
+    HabilitarControles();
 
 }
 
@@ -80,29 +79,31 @@ function CriaElementos () {
 }
 
 
-function criarCelula (txt, classe, id) {                                   //Texto do botão / ALTURA x LARGURA / escrever no render?
+function criarCelula (txt, classe, id) { //Texto do botão / ALTURA x LARGURA / escrever no render?
     var botao = document.createElement('div');
     botao.setAttribute('class', classe);
     botao.setAttribute('id', id);
     botao.innerHTML = txt;
 
     botao.style.width = '100%';
-    return botao;                                                                       //retorna a div e suas propriedades
+    return botao; //retorna a div e suas propriedades
 }
 
-function DefinirLayout (tamanho = [ 2 ], conteudo = [], posicao, id, tamanhoAuto, tdId) {                          //coluna x linha
+function DefinirLayout (tamanho = [ 2 ], conteudo = [], posicao, id, tamanhoAuto, tdId) { //coluna x linha
 
     var nAtual = 0;
     var tabTayout = document.createElement('table');
     tabTayout.setAttribute('id', id);
 
-    for (let index = 0; index < tamanho[1]; index++) {                                  //até LINHA
-        var linha = document.createElement('tr');                                       //cria tag <tr> LINHA
-        for (let index2 = 0; index2 < tamanho[0]; index2++) {                           //até COLUNA
+    for (let index = 0; index < tamanho[1]; index++) { //até LINHA
+        var linha = document.createElement('tr'); //cria tag <tr> LINHA
+        for (let index2 = 0; index2 < tamanho[0]; index2++) { //até COLUNA
 
-            if (conteudo[nAtual] == undefined) { break; }
+            if (conteudo[nAtual] == undefined) {
+                break;
+            }
 
-            var coluna = document.createElement('td');                                  //cria tag <td> CELULA
+            var coluna = document.createElement('td'); //cria tag <td> CELULA
 
             if (tdId != '') {
                 coluna.setAttribute('id', tdId + conteudo[nAtual].id);
@@ -110,21 +111,21 @@ function DefinirLayout (tamanho = [ 2 ], conteudo = [], posicao, id, tamanhoAuto
             }
 
             if (tamanhoAuto == true) {
-                coluna.style.width = (100 / tamanho[0]) + '%';                              //faz com que a largura seja distribuida na tabela
+                coluna.style.width = (100 / tamanho[0]) + '%'; //faz com que a largura seja distribuida na tabela
             }
-            coluna.appendChild(conteudo[nAtual]);                                       //preenche a coluna com um botão
-            linha.appendChild(coluna);                                                  //coloca as colunas dentro das linhas
+            coluna.appendChild(conteudo[nAtual]); //preenche a coluna com um botão
+            linha.appendChild(coluna); //coloca as colunas dentro das linhas
             nAtual++;
         }
         if (tamanhoAuto == true) {
-            linha.style.height = (100 / tamanho[1]) + '%';                                  //faz com que a altura seja distribuida na tabela
+            linha.style.height = (100 / tamanho[1]) + '%'; //faz com que a altura seja distribuida na tabela
         }
-        tabTayout.appendChild(linha);                                                   //coloca as linhas dentro da tabTayoutela
+        tabTayout.appendChild(linha); //coloca as linhas dentro da tabTayoutela
     }
     if (tamanhoAuto == true) {
         tabTayout.style.height = '100%';
         tabTayout.style.width = '100%';
     }
-    posicao.appendChild(tabTayout);                                                     //coloca a tabela dentro da calc
+    posicao.appendChild(tabTayout); //coloca a tabela dentro da calc
     calc.appendChild(posicao);
 }
