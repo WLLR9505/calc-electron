@@ -1,16 +1,11 @@
 //arquivo responsável por montar a Calculadora
 
-var calcAltura = 1100;
-var calcLargura = 620;
-
 var render = document.getElementById('render');
 var btnlateral = [ 7 ];
 var btnTeclado = [ 12 ];
 
 var calc = document.createElement('div');
 calc.setAttribute('id', 'calc');
-calc.style.width = calcLargura + 'px';
-calc.style.height = calcAltura + 'px';
 calc.style.textAlign = 'center';
 
 var lblResultado = document.createElement('div');
